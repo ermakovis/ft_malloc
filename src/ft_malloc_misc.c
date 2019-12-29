@@ -1,6 +1,23 @@
 #include "libft.h"
 #include "ft_malloc.h"
 
+static void	find_block_split(t_block *block, size_t size)
+{
+	t_block	*next;
+	size_t	block_size;
+
+
+	block_size = sizeof(t_block);
+	if (block->size - size <= block_size)	
+		return ;
+	next = (void*)block + block_size + size;
+	next->next = block->next;
+	next->size = block->size - size - block_size;
+	next->free = 1;
+	block->size = size;
+	block->next = next;
+}
+
 int	 find_block(t_block **block, t_block *ablock, size_t size)
 {
 	t_block	*curr;
@@ -10,6 +27,7 @@ int	 find_block(t_block **block, t_block *ablock, size_t size)
 	{
 		if (curr->free == 1 && curr->size >= size)
 		{
+			find_block_split(curr, size);
 			curr->free = 0;
 			*block = curr;
 			return (EXIT_SUCCESS);
@@ -29,6 +47,14 @@ void	*malloc_mmap(size_t size)
 	return (ptr);
 }
 
+int		init_malloc_block(t_block **ablock, t_block *block, size_t size)
+{
+	*ablock = block;
+	block->free = 1;
+	block->next = 0;
+	block->size = size - sizeof(t_block);
+}
+
 int		init_malloc(void)
 {
 	size_t	page_size;
@@ -45,10 +71,8 @@ int		init_malloc(void)
 	if (!(g_malloc = malloc_mmap(sizeof(t_malloc) + tiny_size + small_size)))
 		return (EXIT_FAILURE);
 	bzero(g_malloc, total_size);
-	g_malloc->tiny_start= g_malloc + 1;
-	g_malloc->tiny_end = g_malloc->tiny_start + tiny_size;	
-	g_malloc->small_start = g_malloc->tiny_end + 1;
-	g_malloc->small_end = g_malloc->small_start + small_size;
-	g_malloc->large_start = g_malloc->small_end + 1;
+	init_malloc_block(&g_malloc->tiny, (t_block*)(g_malloc + 1), tiny_size);
+	init_malloc_block(&g_malloc->small, (void*)g_malloc->tiny + tiny_size, \
+		small_size);
 	return (EXIT_SUCCESS);
 }

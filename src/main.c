@@ -8,17 +8,19 @@ static int	print_line(char *line)
 
 	len = ft_strlen(line) + 1;
 	str = (char*)malloc(len);
-	ft_printf("%p\n", str);
 	ft_strcpy(str, line);
-	ft_printf("%s\n", str);
+	ft_printf("%s", str);
 	free(str);
 }
 
 int main(void)
 {
-	print_line("HELLO");
-	print_line("WORLD");
-	print_line("and leaks");
+	print_line("HELLO\n");
+	print_line("WORLD\n");
+	print_line("and leaks\n");
+	malloc(50);
+	malloc(150);
+	malloc(5000);
 	show_alloc_mem();
 	return (1);
 }

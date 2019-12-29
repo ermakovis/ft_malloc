@@ -18,14 +18,8 @@ typedef struct		s_block
 typedef struct		s_malloc
 {
 	t_block			*tiny;
-	void			*tiny_start;
-	void			*tiny_end;
 	t_block			*small;
-	void			*small_start;
-	void			*small_end;
 	t_block			*large;
-	void			*large_start;
-
 }					t_malloc;
 
 t_malloc			*g_malloc;

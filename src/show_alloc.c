@@ -21,10 +21,10 @@ void	show_alloc_mem(void)
 		ft_dprintf(2, "show_alloc_mem: malloc unintialised\n");
 		return ;
 	}
-	ft_printf("TINY  : %p\n", g_malloc->tiny_start);
+	ft_printf("TINY  : %p\n", g_malloc->tiny);
 	show_alloc_mem_printlist(g_malloc->tiny);
-	ft_printf("SMALL : %p\n", g_malloc->small_start);
+	ft_printf("SMALL : %p\n", g_malloc->small);
 	show_alloc_mem_printlist(g_malloc->small);
-	ft_printf("LARGE : %p\n", g_malloc->large_start);
+	ft_printf("LARGE : %p\n", g_malloc->large);
 	show_alloc_mem_printlist(g_malloc->large);
 }
