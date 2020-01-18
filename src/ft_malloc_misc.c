@@ -1,21 +1,19 @@
 #include "libft.h"
 #include "ft_malloc.h"
 
-static void	find_block_split(t_block *block, size_t size)
+static void	find_block_split(t_block *left, size_t size)
 {
-	t_block	*next;
+	t_block	*right;
 	size_t	block_size;
 
-
 	block_size = sizeof(t_block);
-	if (block->size - size <= block_size)	
-		return ;
-	next = (void*)block + block_size + size;
-	next->next = block->next;
-	next->size = block->size - size - block_size;
-	next->free = 1;
-	block->size = size;
-	block->next = next;
+	right = (void*)left + block_size + size;
+	right->next = left->next;
+	right->prev = left;
+	right->size = left->size - size - block_size;
+	right->free = 1;
+	left->size = size;
+	left->next = right;
 }
 
 int	 find_block(t_block **block, t_block *ablock, size_t size)
@@ -25,7 +23,7 @@ int	 find_block(t_block **block, t_block *ablock, size_t size)
 	curr = ablock;
 	while (curr)
 	{
-		if (curr->free == 1 && curr->size >= size)
+		if (curr->free == 1 && curr->size >= size + sizeof(t_block))
 		{
 			find_block_split(curr, size);
 			curr->free = 0;
@@ -51,6 +49,7 @@ static t_block		*init_malloc_block(t_block *block, size_t size)
 {
 	block->free = 1;
 	block->next = 0;
+	block->prev = 0;
 	block->size = size - sizeof(t_block);
 	return (block);
 }
