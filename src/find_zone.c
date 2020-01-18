@@ -24,9 +24,11 @@ static int	find_zone_small(t_zone **zone, size_t size)
 {
 	t_zone *azone;
 	t_zone *last;
+	t_zone *new_zone;
 
 	last = 0;
 	azone = g_malloc->small;
+	//write(1, "s\n", 2);
 	while (azone)
 	{
 		if (azone->max_block >= size + sizeof(t_block))
@@ -37,11 +39,13 @@ static int	find_zone_small(t_zone **zone, size_t size)
 		last = azone;
 		azone = azone->next;
 	}
-	if (find_zone_create(&last, MALLOC_SMALL_ZONE) == EXIT_FAILURE)
+	if (find_zone_create(&new_zone, MALLOC_SMALL_ZONE) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
-	if (!g_malloc->small)
-		g_malloc->small = last;
-	*zone = last;
+	if (!last)
+		g_malloc->small = new_zone;
+	else
+		last->next = new_zone;
+	*zone = new_zone;
 	return (EXIT_SUCCESS);
 }
 
@@ -49,9 +53,11 @@ static int	find_zone_tiny(t_zone **zone, size_t size)
 {
 	t_zone *azone;
 	t_zone *last;
+	t_zone *new_zone;
 
 	last = 0;
 	azone = g_malloc->tiny;
+	//write(1, "t\n", 2);
 	while (azone)
 	{
 		if (azone->max_block >= size + sizeof(t_block))
@@ -62,13 +68,19 @@ static int	find_zone_tiny(t_zone **zone, size_t size)
 		last = azone;
 		azone = azone->next;
 	}
-	if (find_zone_create(&last, MALLOC_TINY_ZONE) == EXIT_FAILURE)
+	if (find_zone_create(&new_zone, MALLOC_SMALL_ZONE) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
-	if (!g_malloc->tiny)
-		g_malloc->tiny = last;
-	*zone = last;
+	if (!last)
+		g_malloc->tiny = new_zone;
+	else
+	{
+		write(1, "X\n", 2); 
+		last->next = new_zone;
+	}
+	*zone = new_zone;
 	return (EXIT_SUCCESS);
 }
+
 
 int		find_zone(t_zone **zone, size_t size)
 {

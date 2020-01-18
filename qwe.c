@@ -11,9 +11,9 @@ int		main(void)
 
 	i = 0;
 
-	while (i++ < 1000)
+	while (i++ < 200000)
 	{
-		ptr = malloc(500);
+		ptr = malloc(rand() % 5000);
 		printf("%d - %p\n", i, ptr);
 	}
 

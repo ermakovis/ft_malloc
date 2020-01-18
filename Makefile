@@ -19,7 +19,7 @@ NAME		=libft_malloc_$(HOSTTYPE).so
 LIB_NAME 	=libft_malloc.so
 
 CC=			gcc
-FLAGS=		-Wall -Werror -Wextra -fPIC
+FLAGS=		-fPIC #-Wall -Werror -Wextra
 LIB_FLAGS=	-shared
 
 SRC_DIR=	./src

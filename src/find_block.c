@@ -20,6 +20,8 @@ static void	find_block_split(t_block *left, size_t size)
 	size_t	block_size;
 
 	block_size = sizeof(t_block);
+	if (left->size < size + block_size)
+		return ;
 	right = (void*)left + block_size + size;
 	right->next = left->next;
 	right->prev = left;
@@ -36,15 +38,25 @@ int	 find_block(t_block **block, t_zone *zone, size_t size)
 	curr = zone->block;;
 	while (curr)
 	{
-		if (curr->free == 1 && curr->size >= size + sizeof(t_block))
+	//	print_sizet(size);
+	//	write(1, " ", 1);
+	//	print_sizet(curr->size);
+	//	write(1, " ", 1);
+	//	print_sizet(zone->max_block);
+	//	write(1, " ", 1);
+	//	print_sizet(curr->free);
+	//	write(1, "\n", 1);
+		if (curr->free == 1 && curr->size >= size)
 		{
+			//write(1, "found\n", 6);
 			find_block_split(curr, size);
-			set_zone_max_size(zone);
 			curr->free = 0;
+			set_zone_max_size(zone);
 			*block = curr;
 			return (EXIT_SUCCESS);
 		}
 		curr = curr->next;
 	}
+	write(1, "Wrong zone\n", 11);
 	return (EXIT_FAILURE);
 }

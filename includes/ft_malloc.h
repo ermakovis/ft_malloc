@@ -7,8 +7,8 @@
 # include <assert.h>
 # define MALLOC_TINY 64
 # define MALLOC_SMALL 512
-# define MALLOC_TINY_ZONE 4098 
-# define MALLOC_SMALL_ZONE 4098 
+# define MALLOC_TINY_ZONE 4098 * 100 * MALLOC_TINY 
+# define MALLOC_SMALL_ZONE 4098 * 100 * MALLOC_SMALL
 
 typedef struct		s_block
 {
@@ -39,6 +39,7 @@ t_malloc			*g_malloc;
 
 void				*malloc(size_t size);
 void				free(void *ptr);
+void				print_sizet(size_t num);
 
 //void				show_alloc_mem(void);
 int					init_malloc(void);

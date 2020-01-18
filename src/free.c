@@ -20,12 +20,14 @@ static void	free_merge_prev(t_block *block)
 void	free(void *ptr)
 {
 	t_block	*block;
+	t_zone	*zone;
 
 	if (!ptr)
 		return ;
+	//write(1, "f\n", 2);
 	block = (t_block*)ptr - 1;
 	block->free = 1;
-	free_merge_next(block);
-	free_merge_prev(block);
+//	free_merge_next(block);
+//	free_merge_prev(block);
 }
 
