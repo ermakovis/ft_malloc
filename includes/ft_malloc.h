@@ -7,6 +7,8 @@
 # include <assert.h>
 # define MALLOC_TINY 64
 # define MALLOC_SMALL 512
+# define MALLOC_TINY_ZONE 4098 
+# define MALLOC_SMALL_ZONE 4098 
 
 typedef struct		s_block
 {
@@ -16,10 +18,20 @@ typedef struct		s_block
 	struct s_block	*prev;
 }					t_block;
 
+typedef struct		s_zone
+{
+	t_block			*block;
+	void			*start;
+	void			*end;
+	size_t			max_block;
+	struct s_zone	*next;
+}					t_zone;
+
+
 typedef struct		s_malloc
 {
-	t_block			*tiny;
-	t_block			*small;
+	t_zone			*tiny;
+	t_zone			*small;
 	t_block			*large;
 }					t_malloc;
 
@@ -28,9 +40,9 @@ t_malloc			*g_malloc;
 void				*malloc(size_t size);
 void				free(void *ptr);
 
-void				show_alloc_mem(void);
+//void				show_alloc_mem(void);
 int					init_malloc(void);
 void				*malloc_mmap(size_t size);
-int 				find_block(t_block **block, t_block *ablock,\
-					size_t size);
+int 				find_block(t_block **block, t_zone *zone, size_t size);
+int					find_zone(t_zone **zone, size_t size);
 #endif

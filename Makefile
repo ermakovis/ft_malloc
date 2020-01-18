@@ -30,8 +30,10 @@ SRC_NAME= 	malloc.c\
 			free.c\
 			realloc.c\
 			calloc.c\
-			show_alloc.c\
+			find_block.c\
+			find_zone.c\
 			ft_malloc_misc.c
+			#show_alloc.c
 
 SRC= 		$(addprefix $(OBJ_DIR)/, $(SRC_NAME:.c=.o))
 OBJ=		$(SRC)
@@ -40,7 +42,7 @@ INC =		-I ./includes -I $(LIB_DIR)/includes
 all: $(NAME)
 
 $(NAME) : $(OBJ)
-	@$(CC) $(LIB_FLAGS) $(OBJ) -o $(LIB_NAME)
+	@$(CC) $(LIB_FLAGS) $(OBJ) -o $(NAME)
 	@rm -f $(LIB_NAME)
 	@ln -s $(NAME) $(LIB_NAME)
 	@printf "\033[0m\033[35m%-40s\033[1m\033[34m%s\033[0m\n" "Compilation" "Done"
