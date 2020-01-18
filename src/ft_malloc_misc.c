@@ -47,12 +47,12 @@ void	*malloc_mmap(size_t size)
 	return (ptr);
 }
 
-int		init_malloc_block(t_block **ablock, t_block *block, size_t size)
+static t_block		*init_malloc_block(t_block *block, size_t size)
 {
-	*ablock = block;
 	block->free = 1;
 	block->next = 0;
 	block->size = size - sizeof(t_block);
+	return (block);
 }
 
 int		init_malloc(void)
@@ -71,8 +71,8 @@ int		init_malloc(void)
 	if (!(g_malloc = malloc_mmap(sizeof(t_malloc) + tiny_size + small_size)))
 		return (EXIT_FAILURE);
 	bzero(g_malloc, total_size);
-	init_malloc_block(&g_malloc->tiny, (t_block*)(g_malloc + 1), tiny_size);
-	init_malloc_block(&g_malloc->small, (void*)g_malloc->tiny + tiny_size, \
+	g_malloc->tiny = init_malloc_block((t_block*)(g_malloc + 1), tiny_size);
+	g_malloc->small = init_malloc_block((void*)g_malloc->tiny + tiny_size, \
 		small_size);
 	return (EXIT_SUCCESS);
 }

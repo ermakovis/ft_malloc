@@ -10,51 +10,54 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME=malloc
 
-CC=gcc
-FLAGS=-g# -Wall -Werror -Wextra
+ifeq ($(HOSTTYPE),)
+	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
+endif
 
-SRC_DIR=./src
-LIB_DIR=./libft
-OBJ_DIR=./obj
+NAME		=libft_malloc_$(HOSTTYPE).so
+LIB_NAME 	=libft_malloc.so
 
-SRC_NAME=main.c\
-		malloc.c\
-		free.c\
-		realloc.c\
-		calloc.c\
-		show_alloc.c\
-		ft_malloc_misc.c
+CC=			gcc
+FLAGS=		-Wall -Werror -Wextra -fPIC
+LIB_FLAGS=	-shared
 
-SRC = $(addprefix $(OBJ_DIR)/, $(SRC_NAME:.c=.o))
-OBJ = $(SRC)
-INC = -I ./includes -I $(LIB_DIR)/includes
+SRC_DIR=	./src
+LIB_DIR=	./libft
+OBJ_DIR=	./obj
+
+SRC_NAME= 	malloc.c\
+			free.c\
+			realloc.c\
+			calloc.c\
+			show_alloc.c\
+			ft_malloc_misc.c
+
+SRC= 		$(addprefix $(OBJ_DIR)/, $(SRC_NAME:.c=.o))
+OBJ=		$(SRC)
+INC =		-I ./includes -I $(LIB_DIR)/includes
 
 all: $(NAME)
 
 $(NAME) : $(OBJ)
-	@make -s -C $(LIB_DIR)
-	@$(CC) -shared -fPIC $(OBJ) $(LIB_DIR)/libft.a $(INC) -o $(NAME).so
-
-test : $(OBJ)
-	@make -s -C $(LIB_DIR)
-	@$(CC) -o $(NAME) $(SRC) $(LIB_DIR)/libft.a $(INC) $(FLAGS)
+	@$(CC) $(LIB_FLAGS) $(OBJ) -o $(LIB_NAME)
+	@rm -f $(LIB_NAME)
+	@ln -s $(NAME) $(LIB_NAME)
+	@printf "\033[0m\033[35m%-40s\033[1m\033[34m%s\033[0m\n" "Compilation" "Done"
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	@mkdir -p obj
-	@$(CC) -o $@ -c $< $(INC) $(FLAGS)
-	@echo "\033[0m\033[36m$(notdir $<)\033[1m\033[34m OK\033[0m"
+	@mkdir -p $(OBJ_DIR)
+	@$(CC) -o $@ -c $< $(FLAGS) -O0 -g $(INC) 
+	@printf "\033[0m\033[36m%-40s\033[1m\033[34m%s\033[0m\n" "$(notdir $<)" "Done"
 
 clean:
-		@make clean -s -C $(LIB_DIR)
-		@rm -f $(OBJ)
+	@make clean -s -C $(LIB_DIR)
+	@rm -f $(OBJ)
+	@printf "\033[0m\033[33m%-40s\033[1m\033[34m%s\033[0m\n" "Clean" "Done"
 
 fclean: clean
-		@make fclean -s -C $(LIB_DIR)
-		@find . -type f -name ".*.swp" -exec rm -f {} \;
-		@rm -rf *test*
-		@rm -rf $(NAME)*
+	@rm -rf $(NAME) $(LIB_NAME)
+	@printf "\033[0m\033[33m%-40s\033[1m\033[34m%s\033[0m\n" "Full Clean" "Done"
 
 re:	fclean all
 

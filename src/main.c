@@ -11,6 +11,7 @@ static int	print_line(char *line)
 	ft_strcpy(str, line);
 	ft_printf("%s", str);
 	free(str);
+	return (1);
 }
 
 int main(void)

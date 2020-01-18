@@ -14,8 +14,6 @@ void	show_alloc_mem_printlist(t_block *block)
 
 void	show_alloc_mem(void)
 {
-	t_list		*list;
-
 	if (!g_malloc)
 	{
 		ft_dprintf(2, "show_alloc_mem: malloc unintialised\n");
