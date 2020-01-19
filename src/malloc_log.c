@@ -34,6 +34,8 @@ static int	malloc_log_argument(const char *format, va_list valist)
 		return (0);
 	if (format[1] == 'd')
 		malloc_print_sizet(va_arg(valist, size_t));
+	if (format[1] == 's')
+		ft_putstr(va_arg(valist, char*));
 	return (2);
 }
 
@@ -53,10 +55,11 @@ void		malloc_log(int loglevel, const char *format, ...)
 {
 	va_list		valist;
 
-	if (loglevel < g_malloc->loglevel)
+	if (loglevel > g_malloc->loglevel)
 		return ;
 	va_start(valist, format);
 	malloc_log_cycle(valist, (char*)format);
 	va_end(valist);
+	write(1, "\n", 1);
 	return ;
 }

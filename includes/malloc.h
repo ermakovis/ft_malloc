@@ -7,16 +7,19 @@
 # include <stdarg.h>
 //Atm only for EXIT_FAILURE/EXIT_SUCCESS macros
 # include <stdlib.h>
+# include <errno.h>
 
 # define MALLOC_TINY 		64
 # define MALLOC_SMALL 		512
-# define MALLOC_TINY_ZONE 	4098 * 100 * MALLOC_TINY 
-# define MALLOC_SMALL_ZONE 	4098 * 100 * MALLOC_SMALL
+# define MALLOC_TINY_ZONE 	4098 * 10
+# define MALLOC_SMALL_ZONE 	4098 * 20
 # define LOG_NONE			0
 # define LOG_FILE 			1
 # define LOG_BRIEF 			(1 << 2)
 # define LOG_FULL 			(1 << 1)
-# define LOG_MESSAGE_LEN 	512
+# define COL_RED			"\x1b[31m"
+# define COL_YELLOW			"\x1b[33m"
+# define COL_RESET			"\x1b[0m"
 
 typedef struct		s_block
 {

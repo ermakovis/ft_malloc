@@ -12,8 +12,6 @@ static int	find_zone_create(t_zone **zone, size_t size)
 	ret->block->next = 0;
 	ret->block->prev = 0;
 	ret->block->size = size - sizeof(t_zone);
-	ret->start = ret + 1;
-	ret->end = (void*)ret + size;
 	ret->max_block = 0;
 	ret->next = 0;
 	*zone = ret;

@@ -16,8 +16,12 @@ void	*malloc_mmap(size_t size)
 
 	ptr = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANON, -1, 0);
 	//ptr = mmap(0, size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_SHARED, -1, 0);
-	if (ptr == NULL)
+	if (ptr == MAP_FAILED)
+	{
+		malloc_log(LOG_BRIEF, "%sERROR - Mmap retured ZERO%s",\
+			COL_RED, COL_RESET);
 		return (NULL);
+	}
 	return (ptr);
 }
 
@@ -38,5 +42,6 @@ int		init_malloc(void)
 		g_malloc->loglevel = LOG_FULL;
 	if (loglevel && !ft_strcmp(loglevel, "file"))
 		g_malloc->loglevel = LOG_FILE;
+	malloc_log(LOG_FULL, "Loglevel - %d", g_malloc->loglevel);
 	return (EXIT_SUCCESS);
 }
