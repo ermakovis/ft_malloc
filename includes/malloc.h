@@ -5,10 +5,16 @@
 # include <sys/mman.h>
 # include <unistd.h>
 # include <assert.h>
+# include <string.h>
+
 # define MALLOC_TINY 64
 # define MALLOC_SMALL 512
 # define MALLOC_TINY_ZONE 4098 * 100 * MALLOC_TINY 
 # define MALLOC_SMALL_ZONE 4098 * 100 * MALLOC_SMALL
+# define LOG_NONE	0
+# define LOG_BRIEF 	1
+# define LOG_FULL 	(1 << 1)
+# define LOG_FILE 	(1 << 2)
 
 typedef struct		s_block
 {
@@ -33,6 +39,7 @@ typedef struct		s_malloc
 	t_zone			*tiny;
 	t_zone			*small;
 	t_block			*large;
+	int				loglevel;
 }					t_malloc;
 
 t_malloc			*g_malloc;
@@ -44,6 +51,7 @@ void				print_sizet(size_t num);
 //void				show_alloc_mem(void);
 int					init_malloc(void);
 void				*malloc_mmap(size_t size);
+void				malloc_log(char *message, int loglevel);
 int 				find_block(t_block **block, t_zone *zone, size_t size);
 int					find_zone(t_zone **zone, size_t size);
 #endif

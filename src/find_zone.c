@@ -1,4 +1,4 @@
-#include "ft_malloc.h"
+#include "malloc.h"
 
 static int	find_zone_create(t_zone **zone, size_t size)
 {
@@ -28,9 +28,9 @@ static int	find_zone_small(t_zone **zone, size_t size)
 
 	last = 0;
 	azone = g_malloc->small;
-	//write(1, "s\n", 2);
 	while (azone)
 	{
+		malloc_log("Checking zone", LOG_FULL);
 		if (azone->max_block >= size + sizeof(t_block))
 		{
 			*zone = azone;
@@ -57,9 +57,9 @@ static int	find_zone_tiny(t_zone **zone, size_t size)
 
 	last = 0;
 	azone = g_malloc->tiny;
-	//write(1, "t\n", 2);
 	while (azone)
 	{
+		malloc_log("Checking zone", LOG_FULL);
 		if (azone->max_block >= size + sizeof(t_block))
 		{
 			*zone = azone;

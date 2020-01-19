@@ -1,5 +1,4 @@
-#include "libft.h"
-#include "ft_malloc.h"
+#include "malloc.h"
 
 static void free_merge_next(t_block *block)
 {

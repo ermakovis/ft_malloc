@@ -1,4 +1,4 @@
-#include "ft_malloc.h"
+#include "malloc.h"
 
 static void set_zone_max_size(t_zone *zone)
 {
@@ -38,17 +38,9 @@ int	 find_block(t_block **block, t_zone *zone, size_t size)
 	curr = zone->block;;
 	while (curr)
 	{
-	//	print_sizet(size);
-	//	write(1, " ", 1);
-	//	print_sizet(curr->size);
-	//	write(1, " ", 1);
-	//	print_sizet(zone->max_block);
-	//	write(1, " ", 1);
-	//	print_sizet(curr->free);
-	//	write(1, "\n", 1);
 		if (curr->free == 1 && curr->size >= size)
 		{
-			//write(1, "found\n", 6);
+			malloc_log("Block found\n", LOG_FULL);
 			find_block_split(curr, size);
 			curr->free = 0;
 			set_zone_max_size(zone);
@@ -57,6 +49,5 @@ int	 find_block(t_block **block, t_zone *zone, size_t size)
 		}
 		curr = curr->next;
 	}
-	write(1, "Wrong zone\n", 11);
 	return (EXIT_FAILURE);
 }

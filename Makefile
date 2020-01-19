@@ -32,7 +32,8 @@ SRC_NAME= 	malloc.c\
 			calloc.c\
 			find_block.c\
 			find_zone.c\
-			ft_malloc_misc.c
+			malloc_log.c\
+			malloc_misc.c
 			#show_alloc.c
 
 SRC= 		$(addprefix $(OBJ_DIR)/, $(SRC_NAME:.c=.o))
