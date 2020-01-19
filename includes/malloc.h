@@ -1,20 +1,22 @@
 #ifndef FT_MALLOC_H
 # define FT_MALLOC_H
 
-# include "libft.h"
 # include <sys/mman.h>
 # include <unistd.h>
-# include <assert.h>
-# include <string.h>
+//For malloc_log
+# include <stdarg.h>
+//Atm only for EXIT_FAILURE/EXIT_SUCCESS macros
+# include <stdlib.h>
 
-# define MALLOC_TINY 64
-# define MALLOC_SMALL 512
-# define MALLOC_TINY_ZONE 4098 * 100 * MALLOC_TINY 
-# define MALLOC_SMALL_ZONE 4098 * 100 * MALLOC_SMALL
-# define LOG_NONE	0
-# define LOG_BRIEF 	1
-# define LOG_FULL 	(1 << 1)
-# define LOG_FILE 	(1 << 2)
+# define MALLOC_TINY 		64
+# define MALLOC_SMALL 		512
+# define MALLOC_TINY_ZONE 	4098 * 100 * MALLOC_TINY 
+# define MALLOC_SMALL_ZONE 	4098 * 100 * MALLOC_SMALL
+# define LOG_NONE			0
+# define LOG_FILE 			1
+# define LOG_BRIEF 			(1 << 2)
+# define LOG_FULL 			(1 << 1)
+# define LOG_MESSAGE_LEN 	512
 
 typedef struct		s_block
 {
@@ -51,7 +53,17 @@ void				print_sizet(size_t num);
 //void				show_alloc_mem(void);
 int					init_malloc(void);
 void				*malloc_mmap(size_t size);
-void				malloc_log(char *message, int loglevel);
+void				malloc_log(int loglevel, const char *format, ...);
 int 				find_block(t_block **block, t_zone *zone, size_t size);
 int					find_zone(t_zone **zone, size_t size);
+
+/*
+			UTILS
+*/
+int					ft_strcmp(const char *str1, const char *str2);
+int					ft_strlen(const char *str);
+int					ft_strchrlen(const char *str, int c);
+void				ft_putstr(const char *str);
+void				bzero(void *ptr, size_t size);
+
 #endif

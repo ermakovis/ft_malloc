@@ -32,11 +32,11 @@ int		init_malloc(void)
 	bzero(g_malloc, sizeof(t_malloc));
 	if (!(loglevel = getenv("MALLOC_LOG")))
 		g_malloc->loglevel = LOG_NONE;
-	if (loglevel && !strcmp(loglevel, "brief"))
+	if (loglevel && !ft_strcmp(loglevel, "brief"))
 		g_malloc->loglevel = LOG_BRIEF;
-	if (loglevel && !strcmp(loglevel, "full"))
+	if (loglevel && !ft_strcmp(loglevel, "full"))
 		g_malloc->loglevel = LOG_FULL;
-	if (loglevel && !strcmp(loglevel, "file"))
+	if (loglevel && !ft_strcmp(loglevel, "file"))
 		g_malloc->loglevel = LOG_FILE;
 	return (EXIT_SUCCESS);
 }

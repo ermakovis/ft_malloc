@@ -40,7 +40,7 @@ int	 find_block(t_block **block, t_zone *zone, size_t size)
 	{
 		if (curr->free == 1 && curr->size >= size)
 		{
-			malloc_log("Block found\n", LOG_FULL);
+			//malloc_log("Block found\n", LOG_FULL);
 			find_block_split(curr, size);
 			curr->free = 0;
 			set_zone_max_size(zone);

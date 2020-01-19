@@ -30,7 +30,7 @@ static int	find_zone_small(t_zone **zone, size_t size)
 	azone = g_malloc->small;
 	while (azone)
 	{
-		malloc_log("Checking zone", LOG_FULL);
+		//malloc_log("Checking zone", LOG_FULL);
 		if (azone->max_block >= size + sizeof(t_block))
 		{
 			*zone = azone;
@@ -59,7 +59,7 @@ static int	find_zone_tiny(t_zone **zone, size_t size)
 	azone = g_malloc->tiny;
 	while (azone)
 	{
-		malloc_log("Checking zone", LOG_FULL);
+		//malloc_log("Checking zone", LOG_FULL);
 		if (azone->max_block >= size + sizeof(t_block))
 		{
 			*zone = azone;

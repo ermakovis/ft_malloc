@@ -23,7 +23,7 @@ FLAGS=		-fPIC #-Wall -Werror -Wextra
 LIB_FLAGS=	-shared
 
 SRC_DIR=	./src
-LIB_DIR=	./libft
+UTILS_DIR=	./src/utils
 OBJ_DIR=	./obj
 
 SRC_NAME= 	malloc.c\
@@ -36,9 +36,16 @@ SRC_NAME= 	malloc.c\
 			malloc_misc.c
 			#show_alloc.c
 
+UTILS_NAME=	ft_strlen.c\
+			ft_strchrlen.c\
+			ft_strcmp.c\
+			ft_putstr.c\
+			ft_bzero.c
+
 SRC= 		$(addprefix $(OBJ_DIR)/, $(SRC_NAME:.c=.o))
-OBJ=		$(SRC)
-INC =		-I ./includes -I $(LIB_DIR)/includes
+UTILS=		$(addprefix $(OBJ_DIR)/, $(UTILS_NAME:.c=.o))
+OBJ=		$(SRC) $(UTILS)
+INC =		-I ./includes
 
 all: $(NAME)
 
@@ -48,13 +55,17 @@ $(NAME) : $(OBJ)
 	@ln -s $(NAME) $(LIB_NAME)
 	@printf "\033[0m\033[35m%-40s\033[1m\033[34m%s\033[0m\n" "Compilation" "Done"
 
+$(OBJ_DIR)/%.o: $(UTILS_DIR)/%.c
+	@mkdir -p $(OBJ_DIR)
+	@$(CC) -o $@ -c $< $(FLAGS) -O0 -g $(INC) 
+	@printf "\033[0m\033[36m%-40s\033[1m\033[34m%s\033[0m\n" "$(notdir $<)" "Done"
+
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(OBJ_DIR)
 	@$(CC) -o $@ -c $< $(FLAGS) -O0 -g $(INC) 
 	@printf "\033[0m\033[36m%-40s\033[1m\033[34m%s\033[0m\n" "$(notdir $<)" "Done"
 
 clean:
-	@make clean -s -C $(LIB_DIR)
 	@rm -f $(OBJ)
 	@printf "\033[0m\033[33m%-40s\033[1m\033[34m%s\033[0m\n" "Clean" "Done"
 
