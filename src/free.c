@@ -43,12 +43,17 @@ void	free(void *ptr)
 
 	if (!ptr)
 		return ;
+	pthread_mutex_lock(&g_malloc->mutex);
 	block = (t_block*)ptr - 1;
 	malloc_log(LOG_BRIEF, "Free for a block of size %d called", block->size);
 	if (block->size > MALLOC_SMALL)
+	{
+		pthread_mutex_unlock(&g_malloc->mutex);
 		return (free_large(block));
+	}
 	block->free = 1;
 	free_merge_next(block);
-//	free_merge_prev(block);
+	free_merge_prev(block);
+	pthread_mutex_unlock(&g_malloc->mutex);
 }
 

@@ -1,17 +1,28 @@
 #include "malloc.h"
 
+static void	find_zone_add(t_zone **azone, t_zone *zone)
+{
+	malloc_log(LOG_FULL, "before new zone - %d", *azone);
+	malloc_log(LOG_FULL, "zone test - %d", (t_block*)(zone->block)->size);
+	zone->next = *azone;
+	*azone = zone;
+	malloc_log(LOG_FULL, "after new zone - %d", *azone);
+}
+
 static int	find_zone_create(t_zone **zone, size_t size)
 {
 	t_zone *ret;
+	size_t block_shift;
 
-	if (!(ret = malloc_mmap(size)))
+	if ((ret = malloc_mmap(size)) == MAP_FAILED)
 		return (EXIT_FAILURE);
+	block_shift = (sizeof(t_zone) + MALLOC_ALIGN) & ~MALLOC_ALIGN;
 	bzero(ret, size);
-	ret->block = (void*)(ret + sizeof(t_zone));
+	ret->block = (void*)ret + block_shift;
 	ret->block->free = 1;
 	ret->block->next = 0;
 	ret->block->prev = 0;
-	ret->block->size = size - sizeof(t_zone);
+	ret->block->size = size - block_shift;
 	ret->max_block = 0;
 	ret->next = 0;
 	*zone = ret;
@@ -21,61 +32,51 @@ static int	find_zone_create(t_zone **zone, size_t size)
 static int	find_zone_small(t_zone **zone, size_t size)
 {
 	t_zone *azone;
-	t_zone *last;
 	t_zone *new_zone;
 
-	last = 0;
+	malloc_log(LOG_BRIEF, "Looking for a zone");
 	azone = g_malloc->small;
 	while (azone)
 	{
-		//malloc_log("Checking zone", LOG_FULL);
+		malloc_log(LOG_FULL, "\tNext zone");
 		if (azone->max_block >= size + sizeof(t_block))
 		{
 			*zone = azone;
 			return (EXIT_SUCCESS);
 		}
-		last = azone;
 		azone = azone->next;
 	}
+	malloc_log(LOG_BRIEF, "Creating new zone of size %d", MALLOC_SMALL_ZONE);
 	if (find_zone_create(&new_zone, MALLOC_SMALL_ZONE) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
-	if (!last)
-		g_malloc->small = new_zone;
-	else
-		last->next = new_zone;
 	*zone = new_zone;
+	find_zone_add(&g_malloc->small, new_zone);
 	return (EXIT_SUCCESS);
 }
 
 static int	find_zone_tiny(t_zone **zone, size_t size)
 {
 	t_zone *azone;
-	t_zone *last;
 	t_zone *new_zone;
 
-	last = 0;
+	malloc_log(LOG_BRIEF, "Looking for a zone");
 	azone = g_malloc->tiny;
 	while (azone)
 	{
-		//malloc_log("Checking zone", LOG_FULL);
+		malloc_log(LOG_FULL, "\tNext zone");
 		if (azone->max_block >= size + sizeof(t_block))
 		{
 			*zone = azone;
 			return (EXIT_SUCCESS);
 		}
-		last = azone;
 		azone = azone->next;
 	}
-	if (find_zone_create(&new_zone, MALLOC_SMALL_ZONE) == EXIT_FAILURE)
+	malloc_log(LOG_BRIEF, "Creating new zone of size %d", MALLOC_TINY_ZONE);
+	if (find_zone_create(&new_zone, MALLOC_TINY_ZONE) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
-	if (!last)
-		g_malloc->tiny = new_zone;
-	else
-	{
-		write(1, "X\n", 2); 
-		last->next = new_zone;
-	}
+	find_zone_add(&g_malloc->tiny, new_zone);
 	*zone = new_zone;
+	malloc_log(LOG_BRIEF, "Zone creation successfull");
 	return (EXIT_SUCCESS);
 }
 

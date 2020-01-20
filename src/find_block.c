@@ -24,7 +24,7 @@ static void	find_block_split(t_block *left, size_t size)
 	size_t	block_size;
 
 	block_size = sizeof(t_block);
-	if (left->size < size + block_size)
+	if (left->size <= size + block_size)
 		return ;
 	right = (void*)left + block_size + size;
 	right->next = left->next;
@@ -43,6 +43,7 @@ int	 find_block(t_block **block, t_zone *zone, size_t size)
 
 	malloc_log(LOG_BRIEF, "Looking for big enough block");
 	curr = zone->block;
+	malloc_log(LOG_BRIEF, "Zone address - %d", zone);
 	while (curr)
 	{
 		malloc_log(LOG_FULL, "\tCurrent block - %d - %d",\

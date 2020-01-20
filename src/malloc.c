@@ -6,8 +6,6 @@ static void *malloc_small(size_t size)
 	t_zone	*zone;
 
 	malloc_log(LOG_BRIEF, "Size of malloc is - SMALL");
-	size = (size + 31) & ~31;
-	malloc_log(LOG_FULL, "Size aligned to - %d", size);
 	if (find_zone(&zone, size) == EXIT_FAILURE)
 	{
 		malloc_log(LOG_BRIEF, "%sERROR - Failed to find zone%s",\
@@ -26,8 +24,6 @@ static void *malloc_large(size_t size)
 	t_block	*ret;
 
 	malloc_log(LOG_BRIEF, "Size of malloc is - LARGE");
-	size = (size + 31) & ~31;
-	malloc_log(LOG_FULL, "Size aligned to - %d", size);
 	errno = 0;
 	if (!(ret = malloc_mmap(size + sizeof(t_block))))
 	{
@@ -41,20 +37,28 @@ static void *malloc_large(size_t size)
 	ret->size = size;
 	ret->free = 0;
 	ret->prev = 0;
-	//ret->next = g_malloc->large;
+	ret->next = g_malloc->large;
 	//if (g_malloc->large)
 	//	g_malloc->large->prev = ret;
-	//g_malloc->large = ret;
+	g_malloc->large = ret;
 	malloc_log(LOG_FULL, "Malloc successfull");
 	return (ret + 1);
 }
 
 void	*malloc(size_t size)
 {
+	void *ret;
+
 	if (init_malloc() == EXIT_FAILURE)
 		return (NULL);
+	pthread_mutex_lock(&g_malloc->mutex);
+	malloc_log(LOG_FULL, "pagesize %d", getpagesize());
+	size = (size + MALLOC_ALIGN) & ~MALLOC_ALIGN;
 	malloc_log(LOG_BRIEF, "Malloc started - %d", size);
 	if (size <= MALLOC_SMALL)
-		return (malloc_small(size));
-	return (malloc_large(size));
+		ret = malloc_small(size);
+	else
+		ret = malloc_large(size);
+	pthread_mutex_unlock(&g_malloc->mutex);
+	return (ret);
 }

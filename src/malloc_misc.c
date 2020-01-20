@@ -18,7 +18,7 @@ void	*malloc_mmap(size_t size)
 	//ptr = mmap(0, size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_SHARED, -1, 0);
 	if (ptr == MAP_FAILED)
 	{
-		malloc_log(LOG_BRIEF, "%sERROR - Mmap retured ZERO%s",\
+//		malloc_log(LOG_BRIEF, "%sERROR - Mmap retured ZERO%s",\
 			COL_RED, COL_RESET);
 		return (NULL);
 	}
@@ -34,6 +34,7 @@ int		init_malloc(void)
 	if (!(g_malloc = malloc_mmap(sizeof(t_malloc))))
 		return (EXIT_FAILURE);
 	bzero(g_malloc, sizeof(t_malloc));
+	pthread_mutex_init(&g_malloc->mutex, NULL);
 	if (!(loglevel = getenv("MALLOC_LOG")))
 		g_malloc->loglevel = LOG_NONE;
 	if (loglevel && !ft_strcmp(loglevel, "brief"))

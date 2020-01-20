@@ -8,11 +8,13 @@
 //Atm only for EXIT_FAILURE/EXIT_SUCCESS macros
 # include <stdlib.h>
 # include <errno.h>
+# include <pthread.h>
 
 # define MALLOC_TINY 		64
 # define MALLOC_SMALL 		512
-# define MALLOC_TINY_ZONE 	4098 * 10
-# define MALLOC_SMALL_ZONE 	4098 * 20
+# define MALLOC_ALIGN		15
+# define MALLOC_TINY_ZONE 	4096 * 4
+# define MALLOC_SMALL_ZONE 	4096 * 40
 # define LOG_NONE			0
 # define LOG_FILE 			1
 # define LOG_BRIEF 			(1 << 2)
@@ -45,6 +47,7 @@ typedef struct		s_malloc
 	t_zone			*small;
 	t_block			*large;
 	int				loglevel;
+	pthread_mutex_t	mutex;
 }					t_malloc;
 
 t_malloc			*g_malloc;
