@@ -13,8 +13,8 @@
 # define MALLOC_TINY 		64
 # define MALLOC_SMALL 		512
 # define MALLOC_ALIGN		15
-# define MALLOC_TINY_ZONE 	4096 * 4
-# define MALLOC_SMALL_ZONE 	4096 * 40
+# define MALLOC_TINY_ZONE 	4096
+# define MALLOC_SMALL_ZONE 	4096
 # define LOG_NONE			0
 # define LOG_FILE 			1
 # define LOG_BRIEF 			(1 << 2)

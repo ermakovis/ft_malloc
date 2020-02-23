@@ -18,7 +18,7 @@ endif
 NAME		=libft_malloc_$(HOSTTYPE).so
 LIB_NAME 	=libft_malloc.so
 
-CC=			clang#gcc
+CC=			gcc
 FLAGS=		-fPIC #-Wall -Werror -Wextra
 LIB_FLAGS=	-shared
 

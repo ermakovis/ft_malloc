@@ -26,15 +26,13 @@ static void	free_merge_prev(t_block *block)
 
 void	free_large(t_block *block)
 {
-	errno = 0;
-	malloc_log(LOG_BRIEF, "Munmap - call");
+	malloc_log(LOG_BRIEF, "Munmap - call, %d - pointer, %d - size",\
+		block, block->size);
 	if (munmap((void*)block, block->size + sizeof(t_block)) == -1)
 	{
-		malloc_log(LOG_BRIEF, "%sERROR - Mmap retured ZERO%s",\
+		malloc_log(LOG_BRIEF, "%sERROR - Munmap retured ZERO%s",\
 			COL_RED, COL_RESET);
 	}
-	malloc_log(LOG_FULL, "errno - %d", errno);
-	malloc_log(LOG_BRIEF, "Munmap successfull");
 }
 
 void	free(void *ptr)
@@ -44,16 +42,17 @@ void	free(void *ptr)
 	if (!ptr)
 		return ;
 	pthread_mutex_lock(&g_malloc->mutex);
-	block = (t_block*)ptr - 1;
-	malloc_log(LOG_BRIEF, "Free for a block of size %d called", block->size);
-	if (block->size > MALLOC_SMALL)
-	{
-		pthread_mutex_unlock(&g_malloc->mutex);
-		return (free_large(block));
-	}
+	block = (t_block*)(ptr - sizeof(t_block)) ;
+	malloc_log(LOG_BRIEF, "Free for a block of size %d called %d ptr", \
+		ptr, block->size);
+//	if (block->size > MALLOC_SMALL)
+//	{
+//		pthread_mutex_unlock(&g_malloc->mutex);
+//		return (free_large(block));
+//	}
 	block->free = 1;
-	free_merge_next(block);
-	free_merge_prev(block);
+	//free_merge_next(block);
+	//free_merge_prev(block);
 	pthread_mutex_unlock(&g_malloc->mutex);
 }
 

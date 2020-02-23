@@ -11,11 +11,23 @@ int		main(void)
 
 	i = 0;
 
-	while (i++ < 1)
+	while (i++ < 100)
 	{
-		ptr = malloc(rand() % 5000);
-		printf("%d - %p\n", i, ptr);
+		ptr = malloc(rand() % 64);
+		//printf("%d - %p\n", i, ptr);
+		free(ptr);
 	}
-
+	while (i++ < 100)
+	{
+		ptr = malloc(rand() % 512);
+		//printf("%d - %p\n", i, ptr);
+		free(ptr);
+	}
+	while (i++ < 100)
+	{
+		ptr = malloc(rand() % 5024);
+		//printf("%d - %p\n", i, ptr);
+		free(ptr);
+	}
 	return (1);
 }

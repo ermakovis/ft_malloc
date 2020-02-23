@@ -18,8 +18,7 @@ void	*malloc_mmap(size_t size)
 	//ptr = mmap(0, size, PROT_READ | PROT_WRITE, MAP_ANON | MAP_SHARED, -1, 0);
 	if (ptr == MAP_FAILED)
 	{
-//		malloc_log(LOG_BRIEF, "%sERROR - Mmap retured ZERO%s",\
-			COL_RED, COL_RESET);
+//		malloc_log(LOG_BRIEF, "%sERROR - Mmap retured ZERO%s", COL_RED, COL_RESET);
 		return (NULL);
 	}
 	return (ptr);

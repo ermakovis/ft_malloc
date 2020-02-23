@@ -2,11 +2,8 @@
 
 static void	find_zone_add(t_zone **azone, t_zone *zone)
 {
-	malloc_log(LOG_FULL, "before new zone - %d", *azone);
-	malloc_log(LOG_FULL, "zone test - %d", (t_block*)(zone->block)->size);
 	zone->next = *azone;
 	*azone = zone;
-	malloc_log(LOG_FULL, "after new zone - %d", *azone);
 }
 
 static int	find_zone_create(t_zone **zone, size_t size)
@@ -63,7 +60,7 @@ static int	find_zone_tiny(t_zone **zone, size_t size)
 	azone = g_malloc->tiny;
 	while (azone)
 	{
-		malloc_log(LOG_FULL, "\tNext zone");
+		//malloc_log(LOG_FULL, "\tNext zone");
 		if (azone->max_block >= size + sizeof(t_block))
 		{
 			*zone = azone;

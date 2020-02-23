@@ -41,9 +41,7 @@ int	 find_block(t_block **block, t_zone *zone, size_t size)
 {
 	t_block	*curr;
 
-	malloc_log(LOG_BRIEF, "Looking for big enough block");
 	curr = zone->block;
-	malloc_log(LOG_BRIEF, "Zone address - %d", zone);
 	while (curr)
 	{
 		malloc_log(LOG_FULL, "\tCurrent block - %d - %d",\
@@ -51,7 +49,7 @@ int	 find_block(t_block **block, t_zone *zone, size_t size)
 		if (curr->free == 1 && curr->size >= size)
 		{
 			malloc_log(LOG_BRIEF, "Block of size %d found", curr->size);
-			find_block_split(curr, size);
+	//		find_block_split(curr, size);
 			curr->free = 0;
 			set_zone_max_size(zone);
 			*block = curr;
